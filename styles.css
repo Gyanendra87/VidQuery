@@ -1,0 +1,102 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 16px;
+  width: 360px;
+  height: 480px;
+  overflow: hidden;
+  font-size: 18px; /* Keep large font size */
+}
+
+.container {
+  text-align: justify; /* Justified content */
+}
+
+h2 {
+  font-size: 22px; /* Large header */
+  margin-bottom: 12px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 18px; /* Keep large input font size */
+}
+
+.buttons {
+  margin: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+button {
+  flex: 1;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px; /* Large font size */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* space between icon and text */
+  box-shadow: 0 5px 8px rgba(0,0,0,0.15);
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+/* Individual button colors */
+#askBtn {
+  background-color: #28a745; /* Green */
+}
+#askBtn:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+#resetBtn {
+  background-color: #dc3545; /* Red */
+}
+#resetBtn:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+#maximizeBtn {
+  background-color: #fd7e14; /* Orange */
+}
+#maximizeBtn:hover {
+  background-color: #e8590c;
+  transform: scale(1.05);
+}
+
+/* Disabled button */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.answer {
+  margin-top: 16px;
+  max-height: 70%;
+  overflow-y: auto;
+  font-size: 18px; /* Keep answer font large */
+  line-height: 1.6;
+}
+
+/* Maximized state */
+body.maximized {
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 24px;
+  overflow: auto;
+}
