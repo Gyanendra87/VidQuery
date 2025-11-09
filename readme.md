@@ -324,7 +324,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 **⭐ If this project helped you, consider giving it a star!**
 
-Made with ❤️ and ☕ by Gyanendra Singh
+by Gyanendra Singh
 
 _"Making YouTube knowledge accessible through AI, one question at a time."_
 
