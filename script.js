@@ -8,41 +8,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const videoId = videoIdInput.value.trim();
     const question = questionInput.value.trim();
 
-    // Validate input
+    // Input validation
     if (!videoId || !question) {
-      answerDiv.textContent = "⚠️ Please enter both video ID and question.";
+      answerDiv.textContent = "⚠️ Please enter both the YouTube video URL or ID and your question.";
       return;
     }
 
-    // Show loading and disable button
-    answerDiv.textContent = "⏳ Thinking...";
+    // Disable button & show loading text
     askBtn.disabled = true;
-    askBtn.textContent = "Processing...";
+    askBtn.textContent = "⏳ Processing...";
+    answerDiv.textContent = "🧠 Fetching transcript and analyzing your question...";
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/ask", {
+      // Full Hugging Face backend endpoint
+      const response = await fetch("https://Gyanendra87-VidQuery.hf.space/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ video_id: videoId, question })
+        body: JSON.stringify({
+          video_url: videoId,   // supports full URL or ID
+          question: question
+        })
       });
 
       if (!response.ok) {
-        // Handle backend errors gracefully
         if (response.status === 404) {
-          throw new Error("Transcript not available for this video.");
+          throw new Error("⚠️ Transcript not available for this video.");
+        } else if (response.status === 500) {
+          throw new Error("🚨 Server error! Please try again later.");
+        } else {
+          throw new Error(`Unexpected error (${response.status}).`);
         }
-        throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Backend Response:", data);
-      answerDiv.textContent = data.answer?.trim() || "🤔 No answer found.";
-    } catch (error) {
-      console.error("Error fetching answer:", error);
-      if (error.message.includes("Failed to fetch")) {
-        answerDiv.textContent = "❌ Cannot connect to backend. Is it running?";
+      console.log("✅ Backend Response:", data);
+
+      // Display answer or fallback
+      if (data.answer) {
+        answerDiv.textContent = `💬 ${data.answer.trim()}`;
       } else {
-        answerDiv.textContent = `❌ ${error.message}`;
+        answerDiv.textContent = "🤔 No clear answer found in the transcript.";
+      }
+
+    } catch (error) {
+      console.error("❌ Error fetching answer:", error);
+      if (error.message.includes("Failed to fetch")) {
+        answerDiv.textContent = "🌐 Cannot connect to backend. Check if the Hugging Face Space is live.";
+      } else {
+        answerDiv.textContent = error.message;
       }
     } finally {
       // Re-enable button

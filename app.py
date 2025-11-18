@@ -3,7 +3,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# ✅ Updated imports for LangChain 0.2+
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
@@ -12,9 +14,14 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough, Runn
 from langchain_core.output_parsers import StrOutputParser
 from fastapi.concurrency import run_in_threadpool
 
-# Google API key
+# ===============================
+# 🔑 GOOGLE API KEY
+# ===============================
 os.environ["GOOGLE_API_KEY"] = "AIzaSyCijx-P_9GUs6F75rwL7iN00dV3w7mlUnw"
 
+# ===============================
+# 🚀 FASTAPI SETUP
+# ===============================
 app = FastAPI(title="Dynamic YouTube Q&A Backend (Hindi + English)")
 
 # Enable CORS
@@ -25,14 +32,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ===============================
+# 📩 Request Model
+# ===============================
 class QuestionRequest(BaseModel):
     video_id: str
     question: str
 
-# Initialize LLM
+# ===============================
+# 💬 Initialize LLM
+# ===============================
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
-# Prompt Template (Timestamp removed + Bullet fix)
+# ===============================
+# 🧠 Prompt Template
+# ===============================
 prompt = PromptTemplate(
     template="""
 You are a helpful AI assistant.
@@ -48,7 +62,9 @@ Question:
     input_variables=["context", "question"]
 )
 
-# Fetch transcript
+# ===============================
+# 🎥 Fetch Transcript
+# ===============================
 def fetch_transcript(video_id: str):
     try:
         transcript_list = YouTubeTranscriptApi().fetch(video_id, languages=["hi"])
@@ -64,7 +80,9 @@ def fetch_transcript(video_id: str):
     transcript_text = " ".join(snippet.text for snippet in transcript_list)
     return transcript_text
 
-# Create vector store dynamically
+# ===============================
+# 🧩 Create Dynamic Vector Store
+# ===============================
 def create_dynamic_vector_store(transcript: str):
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = splitter.create_documents([transcript])
@@ -72,7 +90,9 @@ def create_dynamic_vector_store(transcript: str):
     vector_store = FAISS.from_documents(chunks, embeddings)
     return vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-# Cache retrievers for performance
+# ===============================
+# ⚡ Cache Retrievers for Performance
+# ===============================
 VECTOR_STORE_CACHE = {}
 def get_retriever(transcript, video_id):
     if video_id in VECTOR_STORE_CACHE:
@@ -81,7 +101,9 @@ def get_retriever(transcript, video_id):
     VECTOR_STORE_CACHE[video_id] = retriever
     return retriever
 
-# /ask endpoint
+# ===============================
+# 💬 /ask Endpoint
+# ===============================
 @app.post("/ask")
 async def ask_question(request: QuestionRequest):
     transcript_text = fetch_transcript(request.video_id)
@@ -95,17 +117,19 @@ async def ask_question(request: QuestionRequest):
     parser = StrOutputParser()
     main_chain = parallel_chain | prompt | llm | parser
     
-    # Run chain in threadpool for async safety
+    # Run in threadpool for async safety
     answer_text = await run_in_threadpool(lambda: main_chain.invoke(request.question))
     
-    # Format bullet points correctly
+    # Format bullet points
     formatted_answer = "\n".join(
         [line if line.strip().startswith("*") else f"* {line.strip()}" for line in answer_text.split("\n") if line.strip()]
     )
     
     return {"answer": formatted_answer}
 
-# Health check
+# ===============================
+# ❤️ Health Check
+# ===============================
 @app.get("/health")
 async def health():
     return {"status": "ok"}
