@@ -23,13 +23,14 @@ RUN apt-get update && apt-get install -y \
 # ================================
 # 📁 Copy Project Files
 # ================================
+COPY requirements.txt /app/
 COPY . /app
 
 # ================================
 # 🔧 Python Dependencies
 # ================================
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # ================================
 # 🌐 Expose App Port
