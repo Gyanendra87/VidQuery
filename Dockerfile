@@ -29,6 +29,7 @@ COPY . /app
 # ================================
 # 🔧 Python Dependencies
 # ================================
+# Upgrade pip first and install requirements
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
