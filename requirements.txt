@@ -1,22 +1,25 @@
+# FastAPI & server
 fastapi==0.116.1
 uvicorn==0.35.0
 gunicorn==21.2.0
 
+# Core utilities
 pydantic==2.10.1
 python-dotenv==1.0.1
-
 requests==2.32.3
 tqdm==4.66.4
-youtube-transcript-api==0.6.2  # .fetch() method supported
 
-# ML / embedding / transformer stack
+# YouTube Transcript API (patched fork with .fetch())
+git+https://github.com/jdepoix/youtube-transcript-api.git@main
+
+# ML / Embedding / Transformer stack
 sentence-transformers==2.5.1
 faiss-cpu==1.13.0
 transformers==4.40.1
 tokenizers==0.19.1
 torch
 
-# LangChain & AI‑related dependencies
+# LangChain & AI-related dependencies
 langchain==0.2.17
 langchain-core==0.2.43
 langchain-community==0.2.19
