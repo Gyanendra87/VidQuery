@@ -3,12 +3,11 @@ uvicorn==0.35.0
 gunicorn==21.2.0
 
 pydantic==2.10.1
-pydantic-core==2.23.2
+# Remove explicit pydantic-core, pip will install compatible version automatically
 python-dotenv==1.0.1
 
 requests==2.32.3
 tqdm==4.66.4
-
 
 youtube-transcript-api==0.6.2
 
