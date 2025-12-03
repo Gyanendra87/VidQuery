@@ -10,7 +10,7 @@ requests==2.32.3
 tqdm==4.66.4
 
 # YouTube Transcript API (patched fork with .fetch())
-git+https://github.com/jdepoix/youtube-transcript-api.git@main
+git+https://github.com/jdepoix/youtube-transcript-api.git@master
 
 # ML / Embedding / Transformer stack
 sentence-transformers==2.5.1
