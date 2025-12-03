@@ -7,7 +7,7 @@ python-dotenv==1.0.1
 
 requests==2.32.3
 tqdm==4.66.4
-youtube-transcript-api==0.6.2
+youtube-transcript-api==0.6.2  # .fetch() method supported
 
 # ML / embedding / transformer stack
 sentence-transformers==2.5.1
